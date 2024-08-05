@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.10)
 project(ReplaceWithProjectName)
 
 # Define the target. 
-# * The target name defaults to the project name. 
-# * The name of the cpp file containing the main function is 
-#   assumed to be the same as the target name.
+# * The target name defaults to the project name.
+# * The cpp file with the main function defaults to main.cpp
+#   in the project root.
 set(TARGET ${PROJECT_NAME})
 set(MAIN_FILE "${CMAKE_SOURCE_DIR}/main.cpp")
 
