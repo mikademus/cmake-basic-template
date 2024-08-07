@@ -1,51 +1,60 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(ReplaceWithProjectName)
+# Define the top-level target.
+project(TopProject)
 
-# Define the target. 
-# * The target name defaults to the project name.
-# * The cpp file with the main function defaults to main.cpp
-#   in the project root.
-set(TARGET ${PROJECT_NAME})
-set(MAIN_FILE "${CMAKE_SOURCE_DIR}/main.cpp")
-
-add_executable(${TARGET} ${MAIN_FILE})
+# Define an interface library for common code
+add_library(Shared INTERFACE)
 
 # Parsing options
-option(GLOB_SOURCES "Use GLOB_RECURSE to find source files" ON)
-option(GLOB_HEADERS "Use GLOB_RECURSE to find include directories" OFF)
+option(GLOB_SHARED_SOURCES "Use GLOB_RECURSE to find shared source files" ON)
+option(GLOB_SHARED_HEADERS "Use GLOB_RECURSE to find shared include directories" OFF)
 
-# Add source files
+# Add shared source files
 #----------------------------------
-if (GLOB_SOURCES)
-    file(GLOB_RECURSE SOURCES "src/*.cpp")
+if (GLOB_SHARED_SOURCES)
+    file(GLOB_RECURSE SHARED_SOURCES "src/*.cpp")
 else()
-    set(SOURCES 
-        # Manually list source files here if not using GLOB
-        # e.g., "${PROJECT_SOURCE_DIR}/src/source1.cpp"
+    set(SHARED_SOURCES 
+        # Manually list shared source files here if not using GLOB
+        # e.g., "${PROJECT_SOURCE_DIR}/src/shared1.cpp"
     )
 endif()
 
-target_sources(${TARGET} PRIVATE ${SOURCES})
+# Helper function to add shared sources to a target
+function(add_shared_sources target)
+    target_sources(${target} PRIVATE ${SHARED_SOURCES})
+endfunction()
 
 # Add include directories
 #----------------------------------
-if (GLOB_HEADERS)
-    file(GLOB_RECURSE HEADER_FILES "include/*.h")
+if (GLOB_SHARED_HEADERS)
+    file(GLOB_RECURSE SHARED_HEADER_FILES "include/*.h")
     
     # Extract unique directories from header files
-    set(INCLUDE_DIRS "")
-    foreach(HEADER_FILE ${HEADER_FILES})
-        get_filename_component(HEADER_DIR ${HEADER_FILE} DIRECTORY)
-        list(APPEND INCLUDE_DIRS ${HEADER_DIR})
+    set(SHARED_INCLUDE_DIRS "")
+    foreach(SHARED_HEADER_FILE ${SHARED_HEADER_FILES})
+        get_filename_component(SHARED_HEADER_DIR ${SHARED_HEADER_FILE} DIRECTORY)
+        list(APPEND SHARED_INCLUDE_DIRS ${SHARED_HEADER_DIR})
     endforeach()
-    list(REMOVE_DUPLICATES INCLUDE_DIRS)
+    list(REMOVE_DUPLICATES SHARED_INCLUDE_DIRS)
 else()
     # Explicitly list include directories
-    set(INCLUDE_DIRS
+    set(SHARED_INCLUDE_DIRS
         ${PROJECT_SOURCE_DIR}/include
-        # Add other directories as needed
     )
 endif()
 
-target_include_directories(${TARGET} PRIVATE ${INCLUDE_DIRS})
+# Configure include directories for the Shared library.
+# Adding the include folders using the BUILD_INTERFACE and
+# INSTALL_INTERFACE CMake generators provides access 
+# to them as library includes (i.e. #include<SharedHeader.h>)
+target_include_directories(Shared INTERFACE
+    $<BUILD_INTERFACE:${SHARED_INCLUDE_DIRS}>
+    $<INSTALL_INTERFACE:include>
+)
+
+# Include subdirectories for each subproject
+#----------------------------------
+add_subdirectory(project_a)
+add_subdirectory(project_b)

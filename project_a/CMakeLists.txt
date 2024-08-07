@@ -8,7 +8,7 @@ project(ProjectA)
 # * The cpp file with the main function defaults to main.cpp
 #   in the subproject folder.
 set(TARGET_A ${PROJECT_NAME})
-set(MAIN_FILE "${CMAKE_SOURCE_DIR}/main.cpp")
+set(MAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/main_a.cpp")
 
 add_executable(${TARGET_A} ${MAIN_FILE})
 
