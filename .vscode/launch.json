@@ -1,0 +1,51 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ProjectA",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/ProjectA/ProjectA",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake: build",
+            "internalConsoleOptions": "openOnSessionStart",
+            "launchCompleteCommand": "exec-run"
+        },
+        {
+            "name": "ProjectB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/ProjectB/ProjectB",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake: build",
+            "internalConsoleOptions": "openOnSessionStart",
+            "launchCompleteCommand": "exec-run"
+        }
+    ]
+}
